@@ -33,23 +33,24 @@ def cli(pattern):
         if len(group) == 1:
             continue
 
-        print('-'*20)
+        click.echo('-'*20)
         min_index, _ = min(enumerate(group), key=lambda x: os.path.getmtime(x[1]))
 
         for idx, value in enumerate(group):
             if idx == min_index:
-                print("{:>10}".format(value))
+                click.echo(f"{' '*6} {value}")
             else:
-                print("\033[91m DELETE\033[00m {}".format(value))
+                click.secho('DELETE', fg='red', nl=False)
+                click.echo(f" {value}")
                 to_delete_list.append(value)
 
     if not to_delete_list:
-        print('no duplicate files found.')
+        click.echo('no duplicate files found.')
         return
 
-    if click.confirm('Do you want to continue?', default=False):
+    if click.confirm('\nDo you want to continue?', default=False):
         for i in to_delete_list:
-            print('deleting {}'.format(i))
+            click.echo(f'deleting {i}')
             os.remove(i)
 
 
